@@ -46,3 +46,60 @@ The driver parameters are at `src/ouster-ros/ouster-ros/config/driver_params.yam
 ```
 ros2 launch ouster_ros driver.launch.py
 ```
+
+# SLAM
+
+`https://roboticsbackend.com/ros2-nav2-generate-a-map-with-slam_toolbox/`
+
+## DDS Configuration
+There might be some issues with a default DDS. Consider using `Cyclone DDS`.
+
+## Install Nav2 and SLAM Toolbox 
+
+```
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup
+```
+
+```
+sudo apt install ros-humble-slam-toolbox
+```
+
+## Start Nav2 and SLAM Toolbox
+
+1. Start your robot.
+2. Start Nav2
+   ```
+   ros2 launch nav2_bringup navigation_launch.py
+   ```
+3. Start SLAM Toolbox
+   ```
+   ros2 launch slam_toolbox online_async_launch.py
+   ```
+4. Start RViz2
+   ```
+   ros2 run rviz2 rviz2 -d /opt/ros/humble/share/nav2_bringup/rviz/nav2_default_view.rviz
+   ```
+
+## Build a map
+1. Make the robot move
+   ```
+   ros2 run teleop_twist_joy teleop_node 
+   ```
+2. Save the map
+   ```
+   ros2 run nav2_map_server map_saver_cli -f my_map
+   ```
+
+# Navigation 
+`https://husarion.com/tutorials/ros2-tutorials/8-slam/`
+## Load a saved map
+1. Load a map
+   ```
+   ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=map.yaml
+   ```
+2. Start `map_server`
+   ```
+   ros2 run nav2_util lifecycle_bringup map_server
+   ```
+
+## AMCL
